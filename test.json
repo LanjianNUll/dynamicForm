@@ -1,0 +1,126 @@
+{
+	"category": "",
+	"version": "V1.0.0.1",
+	"creatDate": "2016-4-20",
+	"author": "用户名",
+	"canvas": {
+		"height": "604px",
+		"width": "955px",
+		"background": "rgb(255, 248, 220) none repeat scroll 0% 0% / cover padding-box border-box",
+		"background_picture": "none"
+	},
+	"itemCount": 6,
+	"controlDivJsonArray": [[
+			"SPAN", {
+				"name": "InputOne",
+				"class": "selectTag",
+				"style": "left: 207px; top: 125px; width: 230px; height: 30px; overflow: hidden; background-color: rgb(255, 255, 255);",
+				"defaultproerty": "currentReferExist",
+				"id": "dragDiv1linkDiv"
+			},[
+				"LABEL", {
+					"class": "inputName"
+				},
+				"姓   名"
+			],[
+				"INPUT", {
+					"class": "inputOne",
+					"type": "text",
+					"name": "inputOne",
+					"placeholder": "请输入。。。"
+				}
+			]
+		],[
+			"SPAN", {
+				"name": "InputOne",
+				"class": "selectTag",
+				"style": "left: 214px; top: 183px; width: 230px; height: 30px; overflow: hidden; background-color: rgb(255, 255, 255);",
+				"linkdivid": "dragDiv1linkDiv"
+			},[
+				"LABEL", {
+					"class": "inputName"
+				},
+				"姓   名"
+			],[
+				"INPUT", {
+					"class": "inputOne",
+					"type": "text",
+					"name": "inputOne",
+					"placeholder": "请输入。。。"
+				}
+			]
+		],[
+			"SPAN", {
+				"name": "InputOne",
+				"class": "selectTag",
+				"style": "left: 205px; top: 238px; width: 230px; height: 30px; overflow: hidden; background-color: rgb(255, 255, 255);"
+			},[
+				"LABEL", {
+					"class": "inputName"
+				},
+				"姓   名"
+			],[
+				"INPUT", {
+					"class": "inputOne",
+					"type": "text",
+					"name": "inputOne",
+					"placeholder": "请输入。。。"
+				}
+			]
+		],[
+			"SPAN", {
+				"name": "InputOne",
+				"class": "selectTag",
+				"style": "left: 197px; top: 320px; width: 230px; height: 30px; overflow: hidden; background-color: rgb(255, 255, 255);"
+			},[
+				"LABEL", {
+					"class": "inputName"
+				},
+				"姓   名"
+			],[
+				"INPUT", {
+					"class": "inputOne",
+					"type": "text",
+					"name": "inputOne",
+					"placeholder": "请输入。。。"
+				}
+			]
+		],[
+			"SPAN", {
+				"name": "InputOne",
+				"class": "selectTag",
+				"style": "left: 195px; top: 394px; width: 230px; height: 30px; overflow: hidden; background-color: rgb(255, 255, 255);"
+			},[
+				"LABEL", {
+					"class": "inputName"
+				},
+				"姓   名"
+			],[
+				"INPUT", {
+					"class": "inputOne",
+					"type": "text",
+					"name": "inputOne",
+					"placeholder": "请输入。。。"
+				}
+			]
+		],[
+			"SPAN", {
+				"name": "InputOne",
+				"class": "selectTag",
+				"style": "left: 211px; top: 482px; width: 230px; height: 30px; overflow: hidden; background-color: rgb(255, 255, 255);"
+			},[
+				"LABEL", {
+					"class": "inputName"
+				},
+				"姓   名"
+			],[
+				"INPUT", {
+					"class": "inputOne",
+					"type": "text",
+					"name": "inputOne",
+					"placeholder": "请输入。。。"
+				}
+			]
+		]
+	]
+}

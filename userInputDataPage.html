@@ -1,0 +1,277 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>录入数据界面</title>
+		<script type="text/javascript" src="js/jquery-2.1.1.js" ></script>
+		<script type="text/javascript" src="js/jquery-ui.js" ></script>
+		<script type="text/javascript" src="js/bootstrap.js" ></script>
+		<script type="text/javascript" src="js/spectrum.js" ></script>
+		<script type="text/javascript" src="js/jquery.json-2.3.js" ></script>
+		<script type="text/javascript" src="js/dom2json.js" ></script>
+		<script type="text/javascript" src="js/jsonml2html.js" ></script>
+		<script type="text/javascript" src="myWriteJs/InputDataPageCommon.js"></script>
+		<script type="text/javascript" src="js/base64.js" ></script>
+		
+		<link rel="stylesheet" href="css/jquery.contextmenu.css" />
+		<link rel="stylesheet" href="css/jquery-ui.css" />
+		<link rel="stylesheet" href="css/bootstrap.css" />
+		<link rel="stylesheet" href="css/spectrum.css" />
+		<!--
+		<script type="text/javascript" src="js/jquery-2.1.1.js" ></script>
+		<script type="text/javascript" src="js/jquery-ui.js" ></script>
+		<script type="text/javascript" src="js/bootstrap.js" ></script>
+		<script type="text/javascript" src="js/jsonml2html.js" ></script>
+		<script type="text/javascript" src="myWriteJs/InputDataPageCommon.js"></script>
+		
+		<link rel="stylesheet" href="css/bootstrap.css" />
+		<link rel="stylesheet" href="css/jquery-ui.css" />
+		<link rel="stylesheet" href="css/spectrum.css" />
+		-->
+	</head>
+	<style>
+		html, body {
+			margin:0;
+			padding:0;
+			width: 100%;
+			height: 100%;
+			}
+		#header{
+			width: 100%;
+			height: 8%;
+			background: grey;
+		}
+		#jsonList{
+			float: left;
+			width: 20%;
+			height: 92%;
+			background: grey;
+			cursor:hand;
+		}
+		
+		#canvasBody{
+			overflow: auto;
+			position: absolute;
+			right: 0px;
+			width: 80%;
+			height: 92%;
+		}
+		
+		a{
+			font-size: 15px;
+		}
+	</style>
+	
+	<body>
+		<!--
+        	作者：765797511@qq.com
+        	时间：2016-05-30
+        	描述：保存的进度条相关
+        -->
+	<div style="width:0px;height: 0px;" hidden="true">
+			
+    		<div class="progress progress-striped active" id="progressDiv" title="正在保存...">
+			   <div class="progress-bar progress-bar-success" role="progressbar" id="porgressBar"
+			      aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" 
+			      style="width: 0%;">
+			      <span class="sr-only">40% 完成</span>
+			   </div>
+			</div>
+			
+    		<div id="saveSuccess" title="提示">
+      			<p> 保存成功！！！</p>
+    		</div>
+    		
+    		<div id="saveFail" title="提示">
+      			<p> 未知原因，保存失败！！！</p>
+    		</div>
+		</div>
+	<!--
+    	作者：765797511@qq.com
+    	时间：2016-05-30
+    	描述：保存文件的模态框
+    -->	
+	<div class="modal fade" id="savaModal" tabindex="-1" role="dialog" 
+			   aria-labelledby="myModalLabel" aria-hidden="true" style="position: absolute;top: 15%;left: 10%;">
+			   <div class="modal-dialog">
+			      <div class="modal-content">
+			         <div class="modal-header">
+			            <button type="button" class="close" 
+			               data-dismiss="modal" aria-hidden="true">
+			                  &times;
+			            </button>
+			            <h4 class="modal-title" id="myModalLabel">
+			               	保存文件
+			            </h4>
+			         </div>
+			         <div class="modal-body" align="center">
+			         	<form class="form-horizontal" role="form">
+						   <div class="form-group">
+						      <label for="fileName" class="col-sm-4 control-label">文件名</label>
+						      <div class="col-sm-8">
+						         <input type="text" class="form-control" id="fileName" 
+						            placeholder="文件名">
+						      </div>
+						   </div>
+						   <div class="form-group">
+						      <label for="fileCreateDate" class="col-sm-4 control-label">文件创建日期</label>
+						      <div class="col-sm-8">
+						         <input type="text" class="form-control" id="fileCreateDate" 
+						            placeholder="文件创建日期">
+						      </div>
+						   </div>
+						   <div class="form-group">
+						      <label for="fileSavaPath" class="col-sm-4 control-label">文件保存类别</label>
+						       <div class="col-sm-8">
+						      	<input class="col-sm-10 control-input" id="fileCategory" style="z-index: 5;"/>
+						     	<select  class="col-sm-11 control-label" id="optio" style="top: -26px; z-index:0;"
+						     		onChange="javascript:fileCategory.value=optio.value;"">
+								</select>
+								</div>
+						   </div>
+						   <div class="form-group">
+						      <label for="fileAuthor" class="col-sm-4 control-label">作者</label>
+						      <div class="col-sm-8">
+						         <input type="text" class="form-control" id="fileAuthor" 
+						            placeholder="作者">
+						      </div>
+						   </div>
+						   <div class="form-group">
+						      <label for="fileDocmentNumber" class="col-sm-4 control-label">档案号</label>
+						      <div class="col-sm-8">
+						         <input type="text" class="form-control" id="fileDocmentNumber" 
+						            placeholder="档案号">
+						      </div>
+						   </div>
+						</form>
+			         </div>
+			         <div class="modal-footer">
+			            <button type="button" class="btn btn-default" 
+			               data-dismiss="modal" >取消
+			            </button>
+			            <button type="button" class="btn btn-primary"
+			            	onclick="postToService()">
+			              	 确定保存
+			            </button>
+			         </div>
+			      </div><!-- /.modal-content -->
+			</div>
+		</div>
+	
+	<div id="header" align="right">
+		<button id="saveFile" type="button" class="btn btn-default btn-sm" 
+						style="font-size: 18px;margin-top: 8px;margin-right: 15px;" data-toggle="tooltip" 
+		   				data-placement="bottom" title="保存文件"
+						onclick="Save()">
+					  <span class="glyphicon glyphicon-save-file"></span>
+		</button>
+	
+		<button id="deleteFile" type="button" class="btn btn-default btn-sm" 
+						style="font-size: 18px;margin-top: 8px;margin-right: 15px;" data-toggle="tooltip" 
+		   				data-placement="bottom" title="清空"
+						onclick="clearFile()">
+					  <span class="glyphicon glyphicon-trash"></span>
+		</button>		<script>
+			   $(function () { $("[data-toggle='tooltip']").tooltip(); });
+		</script>
+		<div style="float: right;margin-top: 15px;">
+			
+			<!--
+                    	作者：765797511@qq.com
+                    	时间：2016-04-18
+                    	描述：这个用户名在服务器获取  这个用户名就是默认值用户名的值
+                    	而userFullName也是从服务器获取这里不再界面显示出来  取得的值只是为了给默认值用户全名的值
+                    -->
+					<span id="userName">用户名</span>
+					<span id="userFullName" hidden="true"></span>
+					<span id="logOut"><a>注销</a></span>
+					<span id="resigter"><a>注册</a></span>
+		</div>
+		
+	</div>
+	
+	<!--
+    	作者：765797511@qq.com
+    	时间：2016-06-17
+    	描述：提过文件列表的div   通过取到的文件名去数据库中提取json
+    -->
+	<div id="jsonList" style="background: white;">
+		<h3 style="background: white;">文档</h3>
+		<div class="tab-pane fade in active" id="common">
+						<div class="panel-group" id="accordion">
+						  <div class="panel panel-default">
+						    <div class="panel-heading" style="cursor: pointer;"
+						    	data-toggle="collapse" data-parent="#accordion" 
+						        href="#collapseOne" onclick="chageTriangelImag(this)">
+						    	<img src="img/triangle.png" height="15px" width="15px" style="margin-bottom: 3px;" />
+						         	模板
+						    </div>
+						    <div id="collapseOne" class="panel-collapse collapse">
+						      <div class="panel-body">
+									
+						      </div>
+						    </div>
+						  </div>
+						  <div class="panel panel-default">
+						    <div class="panel-heading" style="cursor: pointer;" 
+						    	data-toggle="collapse" data-parent="#accordion" 
+						        href="#collapseTwo" onclick="chageTriangelImag(this)">
+						        <img src="img/triangle.png" height="15px" width="15px" style="margin-bottom: 3px;" />
+						       	规划文档
+						    </div>
+						    <div id="collapseTwo" class="panel-collapse collapse">
+						      <div class="panel-body">
+						      </div>
+						    </div>
+						  </div>
+						  <div class="panel panel-default">
+						    <div class="panel-heading" style="cursor: pointer;" data-toggle="collapse" data-parent="#accordion" 
+						          href="#collapseThree" onclick="chageTriangelImag(this)">
+						      	<img src="img/triangle.png" height="15px" width="15px" style="margin-bottom: 3px;" />
+						       		调查表
+						    </div>
+						    <div id="collapseThree" class="panel-collapse collapse">
+						      <div class="panel-body" >
+						      </div>
+						    </div>
+						  </div>
+						  
+						  <div class="panel panel-default">
+						    <div class="panel-heading" style="cursor: pointer;" 
+						    	data-toggle="collapse" data-parent="#accordion" 
+						        href="#collapseFour" onclick="chageTriangelImag(this)">
+						        <img src="img/triangle.png" height="15px" width="15px" style="margin-bottom: 3px;" />
+						       其他
+						    </div>
+						    <div id="collapseFour" class="panel-collapse collapse">
+						      <div class="panel-body">
+						      </div>
+						    </div>
+						  </div>
+						</div>
+				   </div>
+				   
+				   <script>
+				   //改变三角形的
+				   	function chageTriangelImag(e){
+				   		$(e).next("div").on('show.bs.collapse', function () {
+					         $(e).children("img").attr("src","img/triangle2.png");
+				        });
+				        $(e).next("div").on('hide.bs.collapse', function () {
+				        	 $(e).children("img").attr("src","img/triangle.png")
+		       		 	});
+				   	}
+				   </script>
+	</div>
+	
+	<!--
+    	作者：765797511@qq.com
+    	时间：2016-05-30
+    	描述：这里的div为表单录入的提供的
+    -->
+	<div id="canvasBody"></div>
+		<!--
+        	<div id="space"></div>
+        -->
+	</body>
+</html>

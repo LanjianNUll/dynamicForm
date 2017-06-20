@@ -1,0 +1,154 @@
+html, body {
+	margin:0;
+	padding:0;
+	width: 100%;
+	height: 100%;
+}
+/*控件选择区*/
+#selectTag{
+	width: 8%;
+	height: 95%;
+	background: #8B8B8B;
+	float: left;
+	text-align:center;
+}
+/**工具栏和画板*/
+#topAndSpace{
+	width: 92%;
+	height: 95%;
+	float: left;
+}
+/**工具栏*/
+#top{
+	width: 100%;
+	height: 10%;
+	float: left;
+	background: #8B8B8B;
+}
+/**画板*/
+#workSpaceBody{
+	width: 100%;
+	height: 90%;
+	float: left;
+	background-size:cover;
+}
+#workSpace{
+	width: 100%;
+	height: 100%;
+	background: #FFF8DC;
+	position:relative;
+}
+
+/**属性和历史记录区*/
+#historyAndProperty{
+	width: 350px;
+	height: 86%;
+	top:9%;
+	right: 2%;
+	position: absolute;
+	border: solid  2px #A8A8A8;
+	border-radius: 10px;
+	
+}
+/**历史记录区*/
+#history{
+	width: 100%;
+	height: 22%;
+}
+/**属性区*/
+#property{
+	width: 100%;
+	height: 70%;
+	margin: 5px;
+	overflow: auto;
+}
+/**页面底部的画板动作状态区*/
+#afterbody{
+	width: 100%;
+	height: 5%;
+	float: left;
+}
+/**选择控件的Span*/
+.selectTagSpan{
+	font-weight: 700;
+	margin: 15px;
+}
+/**点击鼠标后的按钮*/
+.clickedButton{
+	background:gray ;
+	color: white;
+}
+/**鼠标样式*/
+.cursorClass{
+	cursor:crosshair;
+	
+}
+#newDiv{
+	
+}
+.selectTag{}
+/*控件外边框的共有*/
+.rRightDown,.rLeftDown,.rLeftUp,.rRightUp,.rRight,.rLeft,.rUp,.rDown{
+	position:absolute;
+	background:#6F6F6F;
+	border: 1px snow;
+	width:7px;
+	height:7px;
+	z-index:5;
+	font-size:0;
+}
+/* 控件外边框*/
+.rLeftDown{left:-4px;bottom:-4px;cursor:ne-resize;}
+.rRightUp{right:-4px;top:-4px;cursor:ne-resize;}
+.rRightDown{right:-4px;bottom:-4px;cursor:nw-resize;}
+.rLeftUp{left:-4px;top:-4px;cursor:nw-resize;}
+.rRight{right:-4px;top:50%;margin-top:-4px;cursor:e-resize;}
+.rLeft{left:-4px;top:50%;margin-top:-4px;cursor:e-resize;}
+.rUp{top:-4px;left:50%;margin-left:-4px;cursor:n-resize;}
+.rDown{bottom:-4px;left:50%;margin-left:-4px;cursor:n-resize;}
+.publicdragDiv{border:1px solid #000000; width:100px; height:60px; background:#fff;	position:absolute;}
+.publicDiv{}
+
+/*标签提示div*/
+.tipDiv{
+	position:absolute;
+	border: 1px snow;
+	width:50px;
+	height:20px;
+	z-index:0;
+	left:10px;
+	top:-20px;
+	color: silver;
+}
+/*鼠标选框*/
+.selectRec{
+	position:absolute;
+	border:1px dashed blue; 
+    width:0px;
+    height:0px;left:0px; top:0px; overflow:hidden;
+}
+/**选择控件栏的选择按钮*/
+.SelectBtn{
+	font-size: 15px;
+	width: 50px;
+	height: 60px;
+	margin: 4px;
+}
+
+.propertybody{
+	background: #E5E5E5;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,140 @@
+<!DOCTYPE >
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title></title>
+  <script type="text/javascript" src="js/definedMap.js" ></script>
+		<script type="text/javascript" src="js/jquery-2.1.1.js" ></script>
+		<script type="text/javascript" src="js/jquery-ui.js" ></script>
+		<script type="text/javascript" src="js/jquery.contextmenu.js" ></script>
+		<script type="text/javascript" src="myWriteJs/alignAction.js" ></script>
+		<script type="text/javascript" src="myWriteJs/common.js" ></script>
+		<script type="text/javascript" src="myWriteJs/contextMenu.js" ></script>
+		<script type="text/javascript" src="myWriteJs/definedFromControls.js" ></script>
+		<script type="text/javascript" src="js/bootstrap.js" ></script>
+		<script type="text/javascript" src="js/bootstrap.min.js" ></script>
+		<script type="text/javascript" src="js/spectrum.js" ></script>
+		<script type="text/javascript" src="myWriteJs/propertyControls.js" ></script>
+		<script type="text/javascript" src="js/jquery.json-2.3.js" ></script>
+		<script type="text/javascript" src="js/dom2json.js" ></script>
+		<script type="text/javascript" src="js/jsonml2html.js" ></script>
+		
+		<link rel="stylesheet" href="myWriteCss/common.css" />
+		<link rel="stylesheet" href="myWriteCss/prettyBtn.css" />
+		<link rel="stylesheet" href="css/jquery.contextmenu.css" />
+		<link rel="stylesheet" href="css/jquery-ui.css" />
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/bootstrap.css" />
+		<link rel="stylesheet" href="css/spectrum.css" />
+  
+  <head></head>
+  <body>
+<style type="text/css">
+
+#rRightDown,#rLeftDown,#rLeftUp,#rRightUp,#rRight,#rLeft,#rUp,#rDown{
+	position:absolute;
+	background:#C00;
+	width:7px;
+	height:7px;
+	z-index:5;
+	font-size:0;
+}
+
+#rLeftDown,#rRightUp{cursor:ne-resize;}
+#rRightDown,#rLeftUp{cursor:nw-resize;}
+#rRight,#rLeft{cursor:e-resize;}
+#rUp,#rDown{cursor:n-resize;}
+
+#rLeftDown{left:-4px;bottom:-4px;}
+#rRightUp{right:-4px;top:-4px;}
+#rRightDown{right:-4px;bottom:-4px;background-color:#00F;}
+#rLeftUp{left:-4px;top:-4px;}
+#rRight{right:-4px;top:50%;margin-top:-4px;}
+#rLeft{left:-4px;top:50%;margin-top:-4px;}
+#rUp{top:-4px;left:50%;margin-left:-4px;}
+#rDown{bottom:-4px;left:50%;margin-left:-4px;}
+
+</style>
+<script>
+</script>
+<body>
+	<button onclick="transf()">转换</button>
+		<button onclick="toJsonMethod()">ToJson</button>
+		<input type="text" id="datePicker" class="datebox" />
+	<script>
+	
+	$(".datebox").datepicker({//添加日期选择功能
+            numberOfMonths:1,//显示几个月  
+            showButtonPanel:true,//是否显示按钮面板  
+            dateFormat: 'yy年mm月dd日',//日期格式  
+            clearText:"清除",//清除日期的按钮名称  
+            closeText:"关闭",//关闭选择框的按钮名称  
+            yearSuffix: '年', //年的后缀  
+            showMonthAfterYear:true,//是否把月放在年的后面  
+            monthNames: ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],  
+            dayNamesMin: ['日','一','二','三','四','五','六'] 
+         });
+         
+	function transf(){
+		var publicSpan = $("<span>",{"id":"ListBoxOne","class":"publ"});
+		$("<label>",{"class":"ListBoxOneName"}).text("姓   名").appendTo(publicSpan);
+		$("<input>",{'class':'listBoxOneinputClass'}).appendTo(publicSpan);
+		var selectTag = $('<select>',{'class':'listBoxOneinputTag','multiple':'multiple','change':function(){
+			getOptionAndToStr(event);
+		}}).appendTo(publicSpan);
+		$('<option>',{'class':'listBoxOneOption1'}).text("我的选择与众不同").appendTo(selectTag);
+		$('<option>',{'class':'listBoxOneOption2'}).text("选择品牌1").appendTo(selectTag);
+		$('<option>',{'class':'listBoxOneOption3'}).text("选择品牌2").appendTo(selectTag);
+		$('<option>',{'class':'listBoxOneOption4'}).text("23").appendTo(selectTag);
+		$('<option>',{'class':'listBoxOneOption5'}).text("23").appendTo(selectTag);
+		$('<option>',{'class':'listBoxOneOption6'}).text("255").appendTo(selectTag);
+		
+		$(publicSpan).appendTo("body");
+		
+	}
+	function toJsonMethod(){
+		
+		var doc = document.getElementById("selectTagDiv");	
+		var publicSpanDoc = document.getElementById("ListBoxOne");
+		//console.log($(publicSpanDoc).width());
+		//将dom2json
+		//console.log(JsonML.fromHTML(publicSpanDoc));
+		
+		var jsonObj = JsonML.fromHTML(publicSpanDoc);
+		//Json2Html
+		var Dom = JsonML.toHTML(jsonObj)
+		
+		
+		$(Dom).css({"background":"red"});
+	
+		
+		
+		$(Dom).appendTo("body");
+	}
+	//将选择的拼接起来
+
+<p>我修改了这里</p>
+
+
+	</script>
+
+	</html>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

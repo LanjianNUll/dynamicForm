@@ -1,0 +1,887 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>动态表单设计</title>
+		<script type="text/javascript" src="js/jquery-2.1.1.js" ></script>
+		<script type="text/javascript" src="js/definedMap.js" ></script>
+		<script type="text/javascript" src="js/jquery-ui.js" ></script>
+		<script type="text/javascript" src="js/jquery.contextmenu.js" ></script>
+		<script type="text/javascript" src="myWriteJs/alignAction.js" ></script>
+		<script type="text/javascript" src="myWriteJs/common.js" ></script>
+		<script type="text/javascript" src="myWriteJs/contextMenu.js" ></script>
+		<script type="text/javascript" src="myWriteJs/definedFromControls.js" ></script>
+		<script type="text/javascript" src="js/bootstrap.js" ></script>
+		<script type="text/javascript" src="js/spectrum.js" ></script>
+		<script type="text/javascript" src="myWriteJs/propertyControls.js" ></script>
+		<script type="text/javascript" src="js/jquery.json-2.3.js" ></script>
+		<script type="text/javascript" src="js/dom2json.js" ></script>
+		<script type="text/javascript" src="js/jsonml2html.js" ></script>
+		<script type="text/javascript" src="js/base64.js" ></script>
+		
+		<link rel="stylesheet" href="myWriteCss/common.css" />
+		<link rel="stylesheet" href="myWriteCss/prettyBtn.css" />
+		<link rel="stylesheet" href="css/jquery.contextmenu.css" />
+		<link rel="stylesheet" href="css/jquery-ui.css" />
+		<link rel="stylesheet" href="css/bootstrap.css" />
+		<link rel="stylesheet" href="css/spectrum.css" />
+	</head>
+	<body>
+		<!--
+        	作者：765797511@qq.com
+        	时间：2016-04-04
+        	描述：一个隐藏的div  用来存放对话框之类的div
+        -->
+		<div style="width:0px;height: 0px;" hidden="true">
+			<div id="dialog_deleteCurrentDiv" title="删除">
+      			<p> 确定删除当前控件！！！</p>
+    		</div>
+    		
+    		<div id="dialog_clearAllDiv" title="清空">
+      			<p> 确定清空当前画板！！！</p>
+    		</div>
+    		
+    		<div id="dialog_exit" title="退出">
+      			<p>提醒：现在退出将不会保存当前工作区的内容，是否继续退出！！！</p>
+    		</div>
+    		
+    		<div class="progress progress-striped active" id="progressDiv" title="正在保存...">
+			   <div class="progress-bar progress-bar-success" role="progressbar" id="porgressBar"
+			      aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" 
+			      style="width: 0%;">
+			      <span class="sr-only">40% 完成</span>
+			   </div>
+			</div>
+			
+    		<div id="saveSuccess" title="提示">
+      			<p> 保存成功！！！</p>
+    		</div>
+    		
+    		<div id="saveFail" title="提示">
+      			<p> 未知原因，保存失败！！！</p>
+    		</div>
+		</div>
+		<!--
+        	作者：765797511@qq.com
+        	时间：2016-04-13
+        	描述：保存模态框
+        -->
+		<div class="modal fade" id="savaModal" tabindex="-1" role="dialog" 
+			   aria-labelledby="myModalLabel" aria-hidden="true" style="position: absolute;top: 15%;left: 10%;">
+			   <div class="modal-dialog">
+			      <div class="modal-content">
+			         <div class="modal-header">
+			            <button type="button" class="close" 
+			               data-dismiss="modal" aria-hidden="true">
+			                  &times;
+			            </button>
+			            <h4 class="modal-title" id="myModalLabel">
+			               	保存文件
+			            </h4>
+			         </div>
+			         <div class="modal-body" align="center">
+			         	<form class="form-horizontal" role="form">
+						   <div class="form-group">
+						      <label for="fileName" class="col-sm-4 control-label">文件名</label>
+						      <div class="col-sm-8">
+						         <input type="text" class="form-control" id="fileName" 
+						            placeholder="文件名">
+						      </div>
+						   </div>
+						   <div class="form-group">
+						      <label for="fileCreateDate" class="col-sm-4 control-label">文件创建日期</label>
+						      <div class="col-sm-8">
+						         <input type="text" class="form-control" id="fileCreateDate" 
+						            placeholder="文件创建日期">
+						      </div>
+						   </div>
+						   <div class="form-group">
+						      <label for="fileSavaPath" class="col-sm-4 control-label">文件保存类别</label>
+						       <div class="col-sm-8">
+						      	<input class="col-sm-10 control-input" id="fileCategory" style="z-index: 5;"/>
+						     	<select  class="col-sm-11 control-label" id="optio" style="top: -26px; z-index:0;"
+						     		onChange="javascript:fileCategory.value=optio.value;"">
+								</select>
+								</div>
+						   </div>
+						   <div class="form-group">
+						      <label for="fileAuthor" class="col-sm-4 control-label">作者</label>
+						      <div class="col-sm-8">
+						         <input type="text" class="form-control" id="fileAuthor" 
+						            placeholder="作者">
+						      </div>
+						   </div>
+						   <div class="form-group">
+						      <label for="fileDocmentNumber" class="col-sm-4 control-label">档案号</label>
+						      <div class="col-sm-8">
+						         <input type="text" class="form-control" id="fileDocmentNumber" 
+						            placeholder="档案号">
+						      </div>
+						   </div>
+						</form>
+			         </div>
+			         <div class="modal-footer">
+			            <button type="button" class="btn btn-default" 
+			               data-dismiss="modal" >取消
+			            </button>
+			            <button type="button" class="btn btn-primary"
+			            	onclick="postToService()">
+			              	 确定保存
+			            </button>
+			         </div>
+			      </div><!-- /.modal-content -->
+			</div>
+		</div>
+		<!--
+            	作者：765797511@qq.com
+            	时间：2016-04-13
+            	描述：页面属性的模态框
+            -->
+		<div class="modal fade" id="pagePropertyModal" tabindex="-1" role="dialog" 
+			   aria-labelledby="myModalLabel" aria-hidden="true" style="position: absolute;top: 15%;left: 10%;">
+			   <div class="modal-dialog">
+			      <div class="modal-content">
+			         <div class="modal-header">
+			            <button type="button" class="close" 
+			               data-dismiss="modal" aria-hidden="true">
+			                  &times;
+			            </button>
+			            <h4 class="modal-title" id="myModalLabel">
+			               	页面属性
+			            </h4>
+			         </div>
+			         <div class="modal-body" align="center">
+			         	<form class="form-horizontal" role="form">
+						   <div class="form-group">
+						      <label for="pageProperty" class="col-sm-2 control-label">文件名</label>
+						      <div class="col-sm-10">
+						         <input type="" class="form-control" id="pagePropertySaveFileName"
+						            placeholder="新建文件名">
+						      </div>
+						   </div>
+ 							<div class="form-group">
+								<label for="defaultModal" class="col-sm-2 control-label">引入模板</label>
+								<select  class="col-sm-4 control-input " id="defaultModalCategory" style="height:30px;margin-left:15px;"
+									onchange="changeDefaultCategory()">
+								</select>
+								<select  class="col-sm-4 control-input" id="defaultfile" style="height:30px;margin-left:15px;">
+								</select>
+							</div>
+						</form>
+			         </div>
+			         <div class="modal-footer">
+			            <button type="button" class="btn btn-default" 
+			               data-dismiss="modal" >取消
+			            </button>
+			            <button type="button" class="btn btn-primary"
+			            	onclick="okPageProperty()">
+			              	 确定
+			            </button>
+			         </div>
+			      </div><!-- /.modal-content -->
+			</div>
+		</div>
+		
+		<div id="selectTag" align="center">
+			<!--
+            	作者：765797511@qq.com
+            	时间：2016-03-24
+            	描述：一个logo的div  
+            -->
+			<div id="logo" style="height: 10%;width: 100%;">
+				<img src="img/logo.png" width="100%" height="100%" />
+			</div>
+			<!--
+            	作者：765797511@qq.com
+            	时间：2016-03-24
+            	描述：一个放置控件选择按钮的div
+            -->
+			<div id="selectTagDiv" style="overflow:scroll; width:100%; height: 90%;
+				padding-top:5px;padding-bottom: 45px;">
+				<button id="Recbox" class="btn btn-default btn-sm SelectBtn"
+					data-toggle="tooltip" data-placement="right" 
+		   			title="绘制一个方框">
+					<img src="img/rect.png"/>
+				</br>方	框
+				</button></br>
+				<button id="wordBtn" class="btn btn-default btn-sm SelectBtn"
+					data-toggle="tooltip" data-placement="right" 
+		   			title="绘制一个文本标签">
+					<img src="img/word.png"/>
+				</br>文	字
+				</button></br>
+				
+				<button id="straightLine" class="btn btn-default btn-sm SelectBtn"
+					data-toggle="tooltip" data-placement="right" 
+		   			title="绘制一条直线">
+					<img src="img/line.png"/>
+				</br>直	线
+				</button></br>
+				
+				<button id="inputFrame" class="btn btn-default btn-sm SelectBtn"
+					data-toggle="tooltip" data-placement="right" 
+		   			title="绘制一个单行输入框表单控件">
+					<img src="img/input.png"/>
+				</br>输入框 
+				</button></br>
+				
+				<button id="textarea" class="btn btn-default btn-sm SelectBtn"
+					data-toggle="tooltip" data-placement="right" 
+		   			title="绘制一个多行文本输入控件">
+					<img src="img/textarea.png"/>
+				</br>文本框 
+				</button></br>
+				
+				<button id="downselect" class="btn btn-default btn-sm SelectBtn"
+					data-toggle="tooltip" data-placement="right" 
+		   			title="绘制一个表单下拉控件">
+					<img src="img/xialaselect.png"/>
+				</br>下拉框  
+				</button></br>
+				<button id="ListAndComboxOne" class="btn btn-default btn-sm SelectBtn"
+					data-toggle="tooltip" data-placement="right" 
+		   			title="绘制一个带展开列表的输入框控件">
+					<img src="img/list.png"/>
+				</br>列表一
+				</button></br>
+				<button id="ListAndComboxTwo" class="btn btn-default btn-sm SelectBtn"
+					data-toggle="tooltip" data-placement="right" 
+		   			title="绘制一个带隐藏列表的输入框控件">
+					<img src="img/list.png"/>
+				</br>列表二
+				</button></br>
+				
+				<button id="dateBtn" class="btn btn-default btn-sm SelectBtn"
+					data-toggle="tooltip" data-placement="right" 
+		   			title="绘制一个可选择日期的控件">
+					<img src="img/date.png"/>
+				</br>日期框 
+				</button></br>
+				<button id="fileBox" class="btn btn-default btn-sm SelectBtn"
+					data-toggle="tooltip" data-placement="right" 
+		   			title="绘制一个文件管理框控件">
+					<img src="img/file.png"/>
+				</br>文件框 
+				</button></br>
+				<button id="erweimaBtn" class="btn btn-default btn-sm SelectBtn"
+				data-toggle="tooltip" data-placement="right" 
+		   			title="绘制一张二维码图片">
+					<img src="img/erweima.png"/>
+				</br>二维码 
+				</button></br>
+				
+				<button id="radio" class="btn btn-default btn-sm SelectBtn"
+					data-toggle="tooltip" data-placement="right" 
+		   			title="绘制一个单选的表单控件">
+					<img src="img/radio.png"/>
+				</br>单选框 
+				</button></br>
+				
+				<button id="combox" class="btn btn-default btn-sm SelectBtn"
+					data-toggle="tooltip" data-placement="right" 
+		   			title="绘制一个复选的表单控件">
+					<img src="img/combox.png"/>
+				</br>复选框 
+				</button></br>
+				
+				<button id="submitBtn" class="btn btn-default btn-sm SelectBtn"
+					data-toggle="tooltip" data-placement="right" 
+		   			title="绘制一个用于提交表单的控件">
+					<img src="img/sumbit.png"/>
+				</br>提 交
+				</button></br>
+				<script>
+					$(function () { $("[data-toggle='tooltip']").tooltip(); });
+				</script>
+			</div>
+		</div>
+		<!--
+        	作者：765797511@qq.com
+        	时间：2016-03-24
+        	描述：工具栏和画板的div
+        -->
+		<div id="topAndSpace"> 
+			<!--
+            	作者：765797511@qq.com
+            	时间：2016-03-24
+            	描述：工具栏div
+            -->
+			<div id="top" align="center"> 
+				
+				<div style="float: right;margin-top: 15px;">
+					<span id="userName">用户名</span>
+					<span id="logOut"><a>注销</a></span>
+					<span id="resigter"><a>注册</a></span>
+				</div>
+				
+				<div style="margin-top: 12px;">
+					<button id="leftAlign" type="button" class="btn btn-default btn-sm" 
+						style="font-size: 18px" data-toggle="tooltip" 
+		   				data-placement="bottom" title="左对齐"
+						onclick="leftAlign()">
+					  <span class="glyphicon glyphicon-align-left"></span>
+					</button>
+					<button id="centerAlign" class="btn btn-default btn-sm" 
+						style="font-size: 18px" data-toggle="tooltip" 
+		   				data-placement="bottom" title="居中"
+						 onclick="centerAlign()"> 
+						<span class="glyphicon glyphicon-align-center"></span>
+					</button>
+					<button id="rightAlign" type="button" class="btn btn-default btn-sm" 
+						style="font-size: 18px" data-toggle="tooltip" 
+		   				data-placement="bottom" title="右对齐"
+		   				onclick="rightAlign()">
+						 <span class="glyphicon glyphicon-align-right"></span>
+					</button>
+					<button id="equalHeight"  type="button" class="btn btn-default btn-sm" 
+						style="font-size: 18px" data-toggle="tooltip" 
+		   				data-placement="bottom" title="等高"
+						onclick="equalHeight()">
+						<span class="glyphicon glyphicon-resize-vertical"></span>
+					</button>
+					<button id="equalWidth" type="button" class="btn btn-default btn-sm" 
+						style="font-size: 18px" data-toggle="tooltip" 
+		   				data-placement="bottom" title="等宽"
+						onclick="equalWidth()">
+						<span class="glyphicon glyphicon-resize-horizontal"></span>
+					</button>
+					<button id="resetSerize" type="button" class="btn btn-default btn-sm" 
+						style="font-size: 18px" data-toggle="tooltip" 
+		   				data-placement="bottom" title="重排"
+		   				onclick="resetSerize()">
+						<span class="glyphicon glyphicon-sort-by-attributes"></span>
+					</button>
+					<button id="aboutProperty" type="button" class="btn btn-default btn-sm" 
+						style="font-size: 18px" data-toggle="tooltip" 
+		   				data-placement="bottom" title="属性" 
+		   				onclick="aboutProperty()">
+						<span class="glyphicon glyphicon-cog"></span>
+						</br>
+					</button>
+					<button id="pageAboutProperty" type="button" class="btn btn-default btn-sm" 
+						style="font-size: 18px" data-toggle="tooltip" 
+		   				data-placement="bottom" title="页面属性"
+		   				onclick="pageAboutProperty()">
+						<span class="glyphicon glyphicon-file"></span>
+					</button>
+					<button id="copyCurrentDiv" type="button" class="btn btn-default btn-sm" 
+						style="font-size: 18px" data-toggle="tooltip" 
+		   				data-placement="bottom" title="复制"
+		   				onclick="copyCurrentDiv()">
+						<span class="glyphicon glyphicon-copy"></span>
+					</button>
+					<button id="pasteCurrentDiv" type="button" class="btn btn-default btn-sm" 
+						style="font-size: 18px" data-toggle="tooltip" 
+		   				data-placement="bottom" title="粘贴"
+		   				onclick="pasteCurrentDiv('top')">
+						<span class="glyphicon glyphicon-paste"></span>
+					</button>
+					<button id="otherSave" type="button" class="btn btn-default btn-sm" 
+						style="font-size: 18px" data-toggle="tooltip" 
+		   				data-placement="bottom" title="另存为"
+		   				onclick="otherSave()">
+						<span class="glyphicon glyphicon-floppy-save"></span>
+					</button>
+					<button id="clearAll"  type="button" class="btn btn-default btn-sm" 
+						style="font-size: 18px" data-toggle="tooltip" 
+		   				data-placement="bottom" title="清空" 
+		   				onclick="clearAll()"> 
+						<span class="glyphicon glyphicon-trash"></span>
+					</button>
+					<button id="save" type="button" class="btn btn-default btn-sm" 
+						style="font-size: 18px" data-toggle="tooltip" 
+		   				data-placement="bottom" title="保存"
+						onclick="saveCurrentDivPage()">
+						<span class="glyphicon glyphicon-save-file"></span>
+					</button>
+					<button id="preview" type="button" class="btn btn-default btn-sm" 
+						style="font-size: 18px" data-toggle="tooltip" 
+		   				data-placement="bottom" title="预览"
+		   				onclick="previewOtherPage()">
+						<img src="img/preview.png" width="18px" height="15px"/>
+					</button>
+					<button id="exitpage" type="button" class="btn btn-default btn-sm" 
+						style="font-size: 18px" data-toggle="tooltip" 
+		   				data-placement="bottom" title="退出"
+		   				onclick="exitDesginForm()">
+						<span class="glyphicon glyphicon-off"></span>
+					</button>
+					<script>
+						   $(function () { $("[data-toggle='tooltip']").tooltip(); });
+					</script>
+				</div>
+			</div>
+			
+			
+			<div id="workSpaceBody" style="overflow: auto;">
+				<button id="exitPreViewpage" type="button" class="btn btn-default btn-lg" 
+								style="font-size: 25px;margin-right: 20px;z-index:5;
+								position:absolute;right:0px"
+			   				onclick="exitPreViewPage()">
+							<span class="glyphicon glyphicon-off"><p style="font-size:12px">退出预览</p></span>
+				</button>
+				<!--
+	            	作者：765797511@qq.com
+	            	时间：2016-03-24
+	            	描述：画板 工作区
+	            -->
+				<div id="workSpace" onmousedown="CreateChirdren(event)"
+				 onmousemove="getXandY(event)" onmouseout ="iceSelectRecAction(event)">
+					
+				</div>
+			
+			</div>
+			
+		</div>
+		<!--
+        	作者：765797511@qq.com
+        	时间：2016-03-24
+        	描述：属性和历史记录面板
+        -->
+		<div id="historyAndProperty" style="background: #FFFFFF;">
+			<div id="property">
+				<div id="propertybody">
+					<!--
+                    	作者：765797511@qq.com
+                    	时间：2016-03-25
+                    	描述：头部标签
+                    -->
+					<ul id="propertyTab" class="nav nav-tabs">
+					   <li class="active"><a href="#common" data-toggle="tab">
+					      通用</a>
+					   </li>
+					   <li><a href="#personnal" data-toggle="tab">
+					   	个性</a></li>
+					   	<li><a href="#default" data-toggle="tab">
+					   	默认值</a></li>
+					   	<li><a href="#animtion" data-toggle="tab">
+					   	效果</a></li>
+					   	<li style="float: right;"><img src="img/close.png" width="30px" height="30px" style="margin-right: 15px;margin-top: 5px; cursor: pointer;" 
+					   	onclick="closePropertybody()" data-toggle="tooltip"
+		   				data-placement="bottom" title="关闭">
+					   	</img></li>
+					</ul>
+				</div>
+				
+				<script>
+				//关闭属性面板
+				function closePropertybody(){
+					$("#historyAndProperty").slideUp("slow");
+				}
+				</script>
+				
+				<!--
+                	作者：765797511@qq.com
+                	时间：2016-03-25
+                	描述：内容页,重点编辑区域
+                -->
+				<div id="propertyContent" class="tab-content" >
+				   <div class="tab-pane fade in active" id="common">
+						<div class="panel-group" id="accordion">
+						  <div class="panel panel-default">
+						    <div class="panel-heading" style="cursor: pointer;"
+						    	data-toggle="collapse" data-parent="#accordion" 
+						        href="#collapseOne" onclick="chageTriangelImag(this)">
+						    	<img src="img/triangle.png" height="15px" width="15px" style="margin-bottom: 3px;" />
+						         	控件背景
+						    </div>
+						    <div id="collapseOne" class="panel-collapse collapse">
+						      <div class="panel-body">
+									纯色<input type='text' id="full" style="width: 120px" onchange="changeBackgroundColor()"/>
+									<br/><br/>
+ 								 	<span>
+									图案<select id="picture" style="width:150px; height:30px;" value=""
+										 onchange="changeBackgroundPicture()">
+											<option></option>
+											<option value="lantian">天空</option>
+											<option value="flowers">鲜花</option>
+										</select>
+									</span>
+						      </div>
+						    </div>
+						  </div>
+						  <div class="panel panel-default">
+						    <div class="panel-heading" style="cursor: pointer;" 
+						    	data-toggle="collapse" data-parent="#accordion" 
+						        href="#collapseTwo" onclick="chageTriangelImag(this)">
+						        <img src="img/triangle.png" height="15px" width="15px" style="margin-bottom: 3px;" />
+						       	位置和大小
+						    </div>
+						    <div id="collapseTwo" class="panel-collapse collapse">
+						      <div class="panel-body">
+						      	位置<br />
+						        X  轴：<input type="text" id="divX" style="width: 60px;" onchange="changeDivX()"/>px&nbsp;&nbsp;&nbsp;
+ 							 	Y  轴：<input type="text" id="divY" style="width: 60px;" onchange="changeDivY()"/>px
+ 							 	<br />
+							       大小<br />
+							       高度：<input type="text" id="divHeight" style="width: 60px;" onchange="changeDivHeight()"/>px&nbsp;&nbsp;&nbsp;
+	 							宽度：<input type="text" id="divWidth" style="width: 60px;" onchange="changeDivWidth()"/>px
+						      </div>
+						    </div>
+						  </div>
+						  <div class="panel panel-default">
+						    <div class="panel-heading" style="cursor: pointer;" data-toggle="collapse" data-parent="#accordion" 
+						          href="#collapseThree" onclick="chageTriangelImag(this)">
+						      	<img src="img/triangle.png" height="15px" width="15px" style="margin-bottom: 3px;" />
+						       		边框
+						    </div>
+						    <div id="collapseThree" class="panel-collapse collapse">
+						      <div class="panel-body">
+							        宽度：<select id="boderWidth" style="width:150px; height:30px;" value=""
+											 onchange="changeBoderWidth()">
+												<option></option>
+												<option value="thin">thin</option>
+												<option value="medium">medium</option>
+												<option value="thick">thick</option>
+												<option value="length">length</option>
+											</select>
+											<br /><br />
+								样式：<select id="boderStyle" style="width:150px; height:30px;" value=""
+											 onchange="changeBoderStyle()">
+												<option value="none">none</option>
+												<option value="hidden">hidden</option>
+												<option value="dotted">dotted</option>
+												<option value="dashed">dashed</option>
+												<option value="solid">solid</option>
+												<option value="double">double</option>
+												<option value="groove">groove</option>
+												<option value="ridge">ridge</option>
+												<option value="inset">inset</option>
+												<option value="outset">outset</option>
+											</select>
+											<br /><br />
+								边框颜色<input type='text' id="boderColor" style="width: 120px" onchange="changeBoderColor()"/>
+						      </div>
+						    </div>
+						  </div>
+						  
+						  <div class="panel panel-default">
+						    <div class="panel-heading" style="cursor: pointer;" 
+						    	data-toggle="collapse" data-parent="#accordion" 
+						        href="#collapseFour" onclick="chageTriangelImag(this)">
+						        <img src="img/triangle.png" height="15px" width="15px" style="margin-bottom: 3px;" />
+						       画板设置
+						    </div>
+						    <div id="collapseFour" class="panel-collapse collapse">
+						      <div class="panel-body">
+						      	
+						      	 大小<br />
+							       高度：<input type="text" id="WorkspaceHeight" style="width: 60px;" onchange="changeWorkspaceHeight()"/>px&nbsp;&nbsp;&nbsp;
+	 							宽度：<input type="text" id="WorkspaceWidth" style="width: 60px;" onchange="changeWorkspaceWidth()"/>px
+						      </br></br>
+						      	纯色<input type='text' id="WorkspaceBackgroundColor" style="width: 120px" onchange="changeWorkspaceBackgroundColor()"/>
+									<br/><br/>
+ 								 	<span>
+									图案<select id="WorkspaceBackgroundPicture" style="width:150px; height:30px;" value=""
+										 onchange="changeWorkspaceBackgroundPicture()">
+											<option></option>
+											<option value="sky">天空</option>
+											<option value="flowers">鲜花</option>
+											<option value="rect">方块</option>
+											<option value="pao">泡沫</option>
+										</select>
+									</span>
+						      </div>
+						    </div>
+						  </div>
+						</div>
+				   </div>
+				   
+				   <script>
+				   //改变三角形的
+				   	function chageTriangelImag(e){
+				   		$(e).next("div").on('show.bs.collapse', function () {
+					         $(e).children("img").attr("src","img/triangle2.png");
+				        });
+				        $(e).next("div").on('hide.bs.collapse', function () {
+				        	 $(e).children("img").attr("src","img/triangle.png")
+		       		 	});
+				   	}
+				   </script>
+				   <div class="tab-pane fade" id="personnal">
+				   	<!--
+                       	作者：765797511@qq.com
+                       	时间：2016-03-27
+                       	描述：边框的个性设置
+                       -->
+				   	<div id="RecEdit" hidden="true"><br />
+				   		 背景色： <input type="text" id="recbox"  onchange="changeRecBackgroundColor()"/>
+				   	</div>
+				   	
+				   	<!--
+                       	作者：765797511@qq.com
+                       	时间：2016-03-27
+                       	描述：文本的个性属性设置
+                       -->
+				      <div id="wordEdit" hidden="true">
+				      	<br />
+				    内容：<input type="text" id="fontContent" style="width: 150px;" onchange="changeFontContent()"/>
+			      	<br /><br />
+			      	字体大小:<input type="text" id="fontSize" style="width: 150px;" onchange="changeFontSize()"/>&nbsp;px
+			      		<br /><br />
+		      		字体样式:<input type="text" id="fontStyle" style="width: 150px;" onchange="changeFontStyle()"/>
+		      		   <br /><br />
+				         字体颜色:<input type="text" id="fontColor"  onchange="changeFontColor()"/>&nbsp;&nbsp;&nbsp;
+					  &nbsp;
+					  <button id="fontBold" type="button" class="btn btn-default btn-sm" 
+						style="font-size: 18px" data-toggle="tooltip" 
+		   				data-placement="bottom" title="粗体"
+						onclick="changeFontBold()">
+						 <span class="glyphicon glyphicon-bold"></span>
+					   </button>
+					   &nbsp;&nbsp;
+					   <button id="fontItalic" type="button" class="btn btn-default btn-sm" 
+							style="font-size: 18px" data-toggle="tooltip" 
+			   				data-placement="bottom" title="斜体"
+							onclick="changeFontItalic()">
+						 <span class="glyphicon glyphicon-italic"></span>
+					   </button>
+				      </div><br/>
+				      
+				      <!--
+                      	作者：765797511@qq.com
+                      	时间：2016-03-27
+                      	描述：直线的个性设置
+                      -->
+				      <div id="lineEdit">
+				      	 宽度：<select id="LineWidth" style="width:150px; height:30px;" value=""
+											 onchange="changeLineWidth()">
+												<option></option>
+												<option value="thin">thin</option>
+												<option value="medium">medium</option>
+												<option value="thick">thick</option>
+												<option value="length">length</option>
+											</select>
+											<br /><br />
+						样式：<select id="LineStyle" style="width:150px; height:30px;" value=""
+									 onchange="changeLineStyle()">
+										<option value="none">none</option>
+										<option value="hidden">hidden</option>
+										<option value="dotted">dotted</option>
+										<option value="dashed">dashed</option>
+										<option value="solid">solid</option>
+										<option value="double">double</option>
+										<option value="groove">groove</option>
+										<option value="ridge">ridge</option>
+										<option value="inset">inset</option>
+										<option value="outset">outset</option>
+									</select>
+									<br /><br />
+						直线颜色<input type='text' id="LineColor" style="width: 120px" onchange="changeLineColor()"/>
+				      </div>
+				      
+				      <!--
+                      	作者：765797511@qq.com
+                      	时间：2016-03-27
+                      	描述：输入框的个性设置
+                      -->
+				      <div id="inputEdit" hidden="true">
+				      	文本值：<input type="text" id="inputNameId" onchange="changeInputName()"/><br /><br />
+				      	提示文本：<input type="text" id="inputTip" onchange="changeInputTip()"/><br /><br />
+				      	边框样式：<select id="inputBoderStyle" style="width:150px; height:30px;" value=""
+									 onchange="changeInputStyle()">
+										<option value="solid">solid</option>
+										<option value="hidden">hidden</option>
+										<option value="dotted">dotted</option>
+										<option value="dashed">dashed</option>
+										<option value="double">double</option>
+										<option value="groove">groove</option>
+										<option value="ridge">ridge</option>
+										<option value="inset">inset</option>
+										<option value="outset">outset</option>
+									</select><br />  <br />
+						边框颜色：<input type='text' id="inputBoderColor" style="width: 120px" onchange="changeInputBoderColor()"/>	<br />  <br />
+						背景色：<input type='text' id="inputBackgroundColor" style="width: 120px" onchange="changeInputBackgroundColor()"/><br /><br />
+						是否为密码域：<input type="checkbox" id="isPasswordInput" style="width: 20px; height: 20px; margin-top: 2px;" onchange="isPasswordInputmethod()"/>
+				      </div>
+				      <div id="textAreaEdit" hidden="true">
+				      	
+				      	文本值：<input type="text" id="textAreaNameId" onchange="changetextAreaName()"/><br /><br />
+				      	提示文本：<input type="text" id="textAreaTip" onchange="changetextAreaTip()"/><br /><br />
+				      	边框样式：<select id="textAreaBoderStyle" style="width:150px; height:30px;" value=""
+									 onchange="changetextAreaStyle()">
+										<option value="solid">solid</option>
+										<option value="hidden">hidden</option>
+										<option value="dotted">dotted</option>
+										<option value="dashed">dashed</option>
+										<option value="double">double</option>
+										<option value="groove">groove</option>
+										<option value="ridge">ridge</option>
+										<option value="inset">inset</option>
+										<option value="outset">outset</option>
+									</select><br />  <br />
+						文本溢出：<select id="textAreaOverflowStyle" style="width:150px; height:30px;" value=""
+						 onchange="changetextAreaOverflowStyle()">
+							<option value="visible">visible</option>
+							<option value="hidden">hidden</option>
+							<option value="scroll">scroll</option>
+							<option value="auto">auto</option>
+							<option value="inherit">inherit</option>
+						</select><br />  <br />
+						边框颜色：<input type='text' id="textAreaBoderColor" style="width: 120px" onchange="changetextAreaBoderColor()"/>	<br />  <br />
+						背景色：<input type='text' id="textAreaBackgroundColor" style="width: 120px" onchange="changetextAreaBackgroundColor()"/><br /><br />
+				      </div>
+				      <div id="xialaSelectEdit" hidden="true">
+				      	
+				      	文本值：<input type="text" id="xialaSelectNameId" onchange="changexialaSelectName()"/><br /><br />
+				      	边框样式：<select id="ixialaSelectStyle" style="width:150px; height:30px ;" value=""
+									 onchange="changexialaSelectBoderStyle()">
+										<option value="solid">solid</option>
+										<option value="hidden">hidden</option>
+										<option value="dotted">dotted</option>
+										<option value="dashed">dashed</option>
+										<option value="double">double</option>
+										<option value="groove">groove</option>
+										<option value="ridge">ridge</option>
+										<option value="inset">inset</option>
+										<option value="outset">outset</option>
+									</select><br />  <br />
+						边框颜色：<input type='text' id="xialaSelectBoderColor" style="width: 120px" onchange="changexialaSelectBoderColor()"/>&nbsp;&nbsp;&nbsp;
+						背景色：<input type='text' id="xialaSelectBackgroundColor" style="width: 120px" onchange="changexialaSelectBackgroundColor()"/><br />
+				      	<button id="addBtnXiala" onclick="addItemXia()">添加条目</button>
+				      	<div id="itemXiala" style="overflow: auto;">
+				      	</div>
+				      	
+						
+				 		
+				      </div>
+				      <div id="ListBoxOneEdit" hidden="true">
+				      文本值：<input type="text" id="ListBoxOneNameId" onchange="changeListBoxOneName()"/><br /><br />
+				     边框样式：<select id="listBoxOnetStyle" style="width:150px; height:30px ;" value=""
+									 onchange="changelistBoxOneBoderStyle()">
+										<option value="solid">solid</option>
+										<option value="hidden">hidden</option>
+										<option value="dotted">dotted</option>
+										<option value="dashed">dashed</option>
+										<option value="double">double</option>
+										<option value="groove">groove</option>
+										<option value="ridge">ridge</option>
+										<option value="inset">inset</option>
+										<option value="outset">outset</option>
+									</select><br />  <br />
+					边框颜色：<input type='text' id="listBoxOneBoderColor" style="width: 120px" onchange="changelistBoxOneBoderColor()"/>&nbsp;&nbsp;&nbsp;
+					背景色：<input type='text' id="listBoxOneBackgroundColor" style="width: 120px" onchange="changelistBoxOneBackgroundColor()"/><br />
+				      	
+				      	<button id="addBtnOne" onclick="addItemOne()">添加条目</button>
+				      	<div id="itemOne" style="overflow: auto;">
+				      	</div>
+				      </div>
+				       <div id="ListBoxTwoEdit">
+					      文本值：<input type="text" id="ListBoxTwoNameId" onchange="changeListBoxTwoName()"/><br /><br />
+					     边框样式：<select id="listBoxTwoStyle" style="width:150px; height:30px ;" value=""
+										 onchange="changelistBoxTwoBoderStyle()">
+											<option value="solid">solid</option>
+											<option value="hidden">hidden</option>
+											<option value="dotted">dotted</option>
+											<option value="dashed">dashed</option>
+											<option value="double">double</option>
+											<option value="groove">groove</option>
+											<option value="ridge">ridge</option>
+											<option value="inset">inset</option>
+											<option value="outset">outset</option>
+										</select><br />  <br />
+							边框颜色：<input type='text' id="listBoxTwoBoderColor" style="width: 120px" onchange="changelistBoxTwoBoderColor()"/>&nbsp;&nbsp;&nbsp;
+						背景色：<input type='text' id="listBoxTwoBackgroundColor" style="width: 120px" onchange="changelistBoxTwoBackgroundColor()"/><br />
+				      	<button id="addBtnTwo" onclick="addItemTwo()">添加条目</button>
+				      	<div id="itemTwo" style="overflow: auto;">
+				      	</div>
+				    	
+				      </div>
+				      <div id="dateBoxEdit" hidden="true">
+				     	 文本值：<input type="text" id="dateBoxNameId" onchange="changedateBoxName()"/><br /><br />
+				      	边框样式：<select id="dateBoxStyle" style="width:150px; height:30px ;" value=""
+									 onchange="changedateBoxBoderStyle()">
+										<option value="solid">solid</option>
+										<option value="hidden">hidden</option>
+										<option value="dotted">dotted</option>
+										<option value="dashed">dashed</option>
+										<option value="double">double</option>
+										<option value="groove">groove</option>
+										<option value="ridge">ridge</option>
+										<option value="inset">inset</option>
+										<option value="outset">outset</option>
+									</select><br />  <br />
+						边框颜色：<input type='text' id="dateBoxBoderColor" style="width: 120px" onchange="changedateBoxBoderColor()"/>&nbsp;&nbsp;&nbsp;
+						背景色：<input type='text' id="dateBoxBackgroundColor" style="width: 120px" onchange="changedateBoxBackgroundColor()"/><br />  <br />
+				      	日期格式：<select id="dateContenteStyle" style="width:150px; height:30px ;" value=""
+									 onchange="changedateBoxContentStyle()">
+									 	<option value="yy年mm月dd日">默认</option>
+										<option value="yy-mm-dd">yyyy-mm-dd</option>
+										<option value="yy\mm\dd">yyyy\mm\dd</option>
+										<option value="yy|mm|dd">yyyy|mm|dd</option>
+										<option value="yy_mm_dd">yyyy_mm_dd</option>
+										<option value="yy/mm/dd">yyyy/mm/dd</option>
+									</select><br /><br/>
+						
+				      </div>
+				      <div id="fileSelectEdit" hidden="true"></div>
+				      <div id="erWeiMaEdit" hidden="true">
+				      	
+				      	更换图片：<input type="file" id="erWeiMaUrl" style="width: 200px; height: 20px;" onchange="changeErWeiMaUrl()"/>
+				      	
+				      	
+				      </div>
+				      <div id="radioEdit" hidden="true">
+				      	主题：<input type="text" id="Radio1NameId" onchange="changeRadioSelectName()"/><br /><br />
+				      	
+				      	<h5>选项条目编辑</h5>
+				 		 选项一：<input id="optionRadio1" onchange="changeRadioOption1()"/><br />
+				 		 选项二：<input id="optionRadio2" onchange="changeRadioOption2()"/><br />
+				 		 选项三：<input id="optionRadio3" onchange="changeRadioOption3()"/><br />
+				 		 选项四：<input id="optionRadio4" onchange="changeRadioOption4()"/><br />
+				      </div>
+				      <div id="checkEdit" hidden="true">
+				      	主题：<input type="text" id="checkNameId" onchange="changecheckSelectName()"/><br /><br />
+				      	<h5>选项条目编辑</h5>
+				 		 选项一：<input id="optioncheck1" onchange="changecheckOption1()"/><br />
+				 		 选项二：<input id="optioncheck2" onchange="changecheckOption2()"/><br />
+				 		 选项三：<input id="optioncheck3" onchange="changecheckOption3()"/><br />
+				 		 选项四：<input id="optioncheck4" onchange="changecheckOption4()"/><br />
+				      </div>
+				      <div id="submitEdit" hidden="true">
+				      	文本：<input type="text" id="submitNameId" onchange="changeSubmitName()"/><br /><br />
+				      	背景色：<input type="text" id="submitBackgroundColor" style="width: 120px" onchange="changeSubmitBackgroundColor()" />
+				      </div>
+				   </div>
+				   
+				   <div class="tab-pane fade" id="default"><br />
+				      默认选项：<select id="defaultContent" style="width:150px; height:30px ;" value=""
+									 onchange="changeDefaultContent()">
+									 	<option value="currentTime">当前时间</option>
+										<option value="currentDateTime">当前日期</option>
+										<option value="currentUser">当前用户名</option>
+										<option value="currentFullUser">当前用户全名</option>
+										<option value="currentFileSer">档案号</option>
+										<option value="currentTagRefer">主题词标引</option>
+										<option value="currentFormSql">来自SQL语句</option>
+										<option value="currentReferExist">已经有的录入项</option>
+									</select><br /><br/>
+									
+					<p id="displayCurrentDivDefault"></p>
+					<br/>
+					<div id="UsedDiv" hidden="true">
+					已经有的录入项：<select id="UsedSelect" style="width:150px; height:30px ;"
+										 onchange="changeUsedDiv()">
+										 	<option>当前控件</option>
+										</select><br /><br/>
+					</div>				
+				   </div>
+				   <div class="tab-pane fade" id="animtion">
+				   	
+				   </div>
+				</div>
+			</div>
+			<div style="background-color:#A8A8A8 ; width: 100%;height: 2px;"></div>
+			<div id="historyContent" align="center">
+					<h5> 用到的控件</h5>
+				</div>
+			<div id="history" style="overflow: auto;">
+				
+				<div id="historyBox" style=" margin: 15px;">
+						
+				</div>
+			</div>
+		</div>
+		<div id="afterbody">afterbody</div>
+	</body>
+</html>
